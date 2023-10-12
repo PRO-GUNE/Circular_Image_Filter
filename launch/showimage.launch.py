@@ -26,5 +26,6 @@ def generate_launch_description():
                 parameters=[{"window_name": "Depth"}],
                 remappings=[("image", "kinect/depth/image_raw")],
             ),
+
         ]
     )

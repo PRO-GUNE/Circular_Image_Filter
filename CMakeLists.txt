@@ -48,6 +48,25 @@ target_link_libraries(kinect_ros2_node
 ament_target_dependencies(kinect_ros2_node
   "rclcpp")
 
+add_executable(kinect_color_filter_node 
+  src/kinect_ros2_color_filter_node.cpp)
+ament_target_dependencies(kinect_color_filter_node
+  rclcpp
+  cv_bridge
+  sensor_msgs
+  image_transport
+)
+
+add_executable(kinect_shape_filter_node 
+  src/kinect_ros2_shape_filter_node.cpp)
+ament_target_dependencies(kinect_shape_filter_node
+  rclcpp
+  cv_bridge
+  sensor_msgs
+  image_transport
+)
+
+
 install(TARGETS
   kinect_ros2_component
   ARCHIVE DESTINATION lib
@@ -56,6 +75,8 @@ install(TARGETS
 
 install(TARGETS
   kinect_ros2_node
+  kinect_color_filter_node
+  kinect_shape_filter_node
   DESTINATION lib/${PROJECT_NAME})
 
 install(
