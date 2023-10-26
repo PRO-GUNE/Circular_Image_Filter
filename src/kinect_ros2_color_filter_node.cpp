@@ -11,7 +11,7 @@ public:
     {
         // Subscribe to RGB image topic
         rgb_subscription_ = create_subscription<sensor_msgs::msg::Image>(
-            "/kinect_ros2/image_raw", 10, std::bind(&KinectFilterNode::rgb_callback, this, std::placeholders::_1));
+            "/image_raw", 10, std::bind(&KinectFilterNode::rgb_callback, this, std::placeholders::_1));
 
         // Publish filtered RGB image topic
         filtered_rgb_publisher_ = create_publisher<sensor_msgs::msg::Image>(
@@ -48,10 +48,6 @@ private:
         // Apply the mask to the original image
         cv::Mat filtered_image;
         cv_ptr->image.copyTo(filtered_image, mask);
-
-        // Display filtered image
-        cv::imshow("Filtered Image", cv_ptr->image);
-        cv::waitKey(1);
 
         // Publish filtered RGB image
         auto filtered_msg = cv_bridge::CvImage(msg->header, sensor_msgs::image_encodings::BGR8, filtered_image).toImageMsg();

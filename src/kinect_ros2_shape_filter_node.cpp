@@ -15,7 +15,11 @@ public:
 
         // Subscribe to depth image topic
         depth_subscription_ = create_subscription<sensor_msgs::msg::Image>(
-            "/kinect_ros2/depth/image_raw", 10, std::bind(&ObjectDetectionNode::depth_callback, this, std::placeholders::_1));
+            "/depth/image_raw", 10, std::bind(&ObjectDetectionNode::depth_callback, this, std::placeholders::_1));
+
+        // Publish filtered shape to filtered circles topic
+        filtered_circles_publisher_ = create_publisher<sensor_msgs::msg::Image>(
+            "/filtered_circles", 10);
     }
 
 private:
@@ -56,9 +60,9 @@ private:
             cv::circle(cv_ptr->image, center, radius, cv::Scalar(0, 0, 255), 3, 8, 0);
         }
 
-        // Display the image with circles
-        cv::imshow("Circles Detected", cv_ptr->image);
-        cv::waitKey(1);
+        // Publish the modified image
+        auto filtered_msg = cv_bridge::CvImage(msg->header, sensor_msgs::image_encodings::BGR8, cv_ptr->image).toImageMsg();
+        filtered_circles_publisher_->publish(*filtered_msg);
     }
 
     void depth_callback(const sensor_msgs::msg::Image::SharedPtr msg)
@@ -88,6 +92,7 @@ private:
 
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr filtered_rgb_subscription_;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr depth_subscription_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr filtered_circles_publisher_;
 };
 
 int main(int argc, char **argv)
