@@ -37,17 +37,36 @@ private:
         cv::Mat hsv;
         cv::cvtColor(cv_ptr->image, hsv, cv::COLOR_BGR2HSV);
 
-        // Define lower and upper bounds for white color in HSV
-        cv::Scalar lower_white(0, 0, 200);
-        cv::Scalar upper_white(180, 255, 255);
+        // Lower boundary RED color range values; Hue (0 - 10)
+        cv::Scalar lower_red_1(0, 100, 20);
+        cv::Scalar upper_red_1(10, 255, 255);
 
-        // Create a mask to filter out white pixels
-        cv::Mat mask;
-        cv::inRange(hsv, lower_white, upper_white, mask);
+        // Upper boundary RED color range values; Hue (0 - 10)
+        cv::Scalar lower_red_2(160, 100, 20);
+        cv::Scalar upper_red_2(180, 255, 255);
+
+        // Create a mask to filter out lower red range pixels
+        cv::Mat lower_red_mask;
+        cv::inRange(hsv, lower_red_1, upper_red_1, lower_red_mask);
+
+        // Create a mask to filter out upper red range pixels
+        cv::Mat upper_red_mask;
+        cv::inRange(hsv, lower_red_2, upper_red_2, upper_red_mask);
+
+        // Define lower and upper bounds for blue color in HSV
+        cv::Scalar lower_blue(100, 50, 50);
+        cv::Scalar upper_blue(140, 255, 255);
+        
+        // Create a mask to filter out blue range pixels
+        cv::Mat blue_mask;
+        cv::inRange(hsv, lower_blue, upper_blue, blue_mask);
+
+        // Combine all three masks
+        cv::Mat final_mask = lower_red_mask + upper_red_mask + blue_mask;
 
         // Apply the mask to the original image
         cv::Mat filtered_image;
-        cv_ptr->image.copyTo(filtered_image, mask);
+        cv_ptr->image.copyTo(filtered_image, final_mask);
 
         // Publish filtered RGB image
         auto filtered_msg = cv_bridge::CvImage(msg->header, sensor_msgs::image_encodings::BGR8, filtered_image).toImageMsg();
