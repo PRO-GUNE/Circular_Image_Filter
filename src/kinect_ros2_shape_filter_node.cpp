@@ -23,7 +23,7 @@ public:
 
         // Publish filtered shape to filtered circles topic
         filtered_circles_publisher_ = create_publisher<sensor_msgs::msg::Image>(
-            "/filtered_circles", 10);
+            "/filtered_shapes", 10);
     }
 
 private:

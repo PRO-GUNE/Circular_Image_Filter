@@ -41,7 +41,7 @@ def generate_launch_description():
             executable="showimage",
             name="circles_showimage",
             parameters=[{"window_name": "Filtered Circles"}],
-            remappings=[("image", "/filtered_circles")],
+            remappings=[("image", "/filtered_shapes")],
         ),
 
 
