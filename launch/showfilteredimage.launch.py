@@ -44,5 +44,13 @@ def generate_launch_description():
             remappings=[("image", "/filtered_shapes")],
         ),
 
+        Node(
+            package="image_tools",
+            executable="showimage",
+            name="circles_showimage",
+            parameters=[{"window_name": "Raw Feed"}],
+            remappings=[("image", "/image_raw")],
+        ),
+
 
     ])

@@ -66,6 +66,12 @@ ament_target_dependencies(kinect_shape_filter_node
   image_transport
 )
 
+add_executable(kinect_color_filter_controller_node
+  src/kinect_ros2_color_filter_control_node.cpp)
+ament_target_dependencies(kinect_color_filter_controller_node
+  rclcpp
+  std_msgs
+)
 
 install(TARGETS
   kinect_ros2_component
@@ -76,6 +82,7 @@ install(TARGETS
 install(TARGETS
   kinect_ros2_node
   kinect_color_filter_node
+  kinect_color_filter_controller_node
   kinect_shape_filter_node
   DESTINATION lib/${PROJECT_NAME})
 
