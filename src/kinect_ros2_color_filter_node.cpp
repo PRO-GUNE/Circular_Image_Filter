@@ -94,6 +94,14 @@ private:
         filter_tokens.clear();
         std::string txt = msg->data.c_str(); 
 
+        // Check if the string is empty
+        if(txt.length() == 0){
+            return;
+        }
+        else{
+            pos = txt.length()-1;
+        }
+
         // Decompose statement
         RCLCPP_INFO(this->get_logger(), "Received string: [%d]", txt.find(ch, initialPos)!= std::string::npos);
         while ((pos = txt.find(ch, initialPos)) != std::string::npos)
@@ -102,6 +110,9 @@ private:
             initialPos = pos + 1;
             RCLCPP_INFO(this->get_logger(), "POS: [%d]", pos);
         }
+
+        // add the last item
+        filter_tokens.push_back(txt.substr(initialPos, pos - initialPos));
 
         for (auto ele : filter_tokens)
         {
